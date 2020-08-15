@@ -23,9 +23,9 @@ class BurgerBuilder extends Component {
     }
 
     add_ing = (type) => {
-        const new_count = this.state.ingredients[type] + 1;
+        // const new_count = this.state.ingredients[type] + 1;
         const state_clone = { ...this.state.ingredients };
-        state_clone[type] = state_clone[type] + new_count;
+        state_clone[type] = state_clone[type] + 1;
         this.setState({ ingredients: state_clone });
 
         const price_to_add = ING_PRICE[type];
@@ -33,14 +33,19 @@ class BurgerBuilder extends Component {
     }
 
 
-    rem_ing = (rem) => {
+    rem_ing = (type) => {
+        const state_clone = { ...this.state.ingredients };
+        state_clone[type] = Math.max(state_clone[type] - 1, 0);
+        this.setState({ ingredients: state_clone });
 
+        const price_to_add = ING_PRICE[type];
+        this.setState({ total_price: this.state.total_price + price_to_add });
     }
     render() {
         return (
             <>
                 <Burger ingredients={this.state.ingredients}></Burger>
-                <BuildControls on_add={this.add_ing}></BuildControls>
+                <BuildControls on_rem={this.rem_ing} on_add={this.add_ing}></BuildControls>
             </>
         )
     }
