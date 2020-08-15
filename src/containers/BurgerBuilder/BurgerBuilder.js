@@ -39,13 +39,13 @@ class BurgerBuilder extends Component {
         this.setState({ ingredients: state_clone });
 
         const price_to_add = ING_PRICE[type];
-        this.setState({ total_price: this.state.total_price + price_to_add });
+        this.setState({ total_price: Math.max(4, this.state.total_price - price_to_add) });
     }
     render() {
         return (
             <>
                 <Burger ingredients={this.state.ingredients}></Burger>
-                <BuildControls on_rem={this.rem_ing} on_add={this.add_ing}></BuildControls>
+                <BuildControls total_price={this.state.total_price} ingredients={this.state.ingredients} on_rem={this.rem_ing} on_add={this.add_ing}></BuildControls>
             </>
         )
     }
