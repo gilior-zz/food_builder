@@ -22,7 +22,7 @@ const BuildControls = (props) =>
             </BuildControl>)
 
         }
-        <button disabled={props.total_price == 4} className={classes_order.OrderButton}>Order Now</button>
+        <button onClick={props.on_toggle_modal} disabled={props.total_price == 4} className={classes_order.OrderButton}>Order Now</button>
     </div>)
 
 

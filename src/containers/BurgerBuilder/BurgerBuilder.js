@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+import Modal from "../../components/UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 const ING_PRICE = {
     salad: .2,
     cheese: .4,
@@ -18,8 +20,13 @@ class BurgerBuilder extends Component {
                 meat: 0
 
             },
-            total_price: 4
+            total_price: 4,
+            show_modal: false
         }
+    }
+
+    on_toggle_modal = () => {
+        this.setState({ show_modal: true });
     }
 
     add_ing = (type) => {
@@ -41,11 +48,22 @@ class BurgerBuilder extends Component {
         const price_to_add = ING_PRICE[type];
         this.setState({ total_price: Math.max(4, this.state.total_price - price_to_add) });
     }
+
+    on_modal_close = () => {
+        this.setState({ show_modal: false })
+    }
     render() {
         return (
             <>
+                ?
+                <Modal on_modal_close={this.on_modal_close} show={this.state.show_modal}>
+                    <OrderSummary ingredients={this.state.ingredients}></OrderSummary>
+                </Modal>
+
+
+
                 <Burger ingredients={this.state.ingredients}></Burger>
-                <BuildControls total_price={this.state.total_price} ingredients={this.state.ingredients} on_rem={this.rem_ing} on_add={this.add_ing}></BuildControls>
+                <BuildControls on_toggle_modal={this.on_toggle_modal} total_price={this.state.total_price} ingredients={this.state.ingredients} on_rem={this.rem_ing} on_add={this.add_ing}></BuildControls>
             </>
         )
     }
