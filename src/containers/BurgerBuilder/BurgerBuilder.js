@@ -52,12 +52,16 @@ class BurgerBuilder extends Component {
     on_modal_close = () => {
         this.setState({ show_modal: false })
     }
+
+    on_purchase_continue=()=>{
+        console.log('u continue!')
+    }
     render() {
         return (
             <>
                 ?
-                <Modal on_modal_close={this.on_modal_close} show={this.state.show_modal}>
-                    <OrderSummary ingredients={this.state.ingredients}></OrderSummary>
+                <Modal  on_modal_close={this.on_modal_close} show={this.state.show_modal}>
+                    <OrderSummary total_price={this.state.total_price} on_purchase_continue={this.on_purchase_continue} on_cancel={this.on_modal_close} ingredients={this.state.ingredients}></OrderSummary>
                 </Modal>
 
 
