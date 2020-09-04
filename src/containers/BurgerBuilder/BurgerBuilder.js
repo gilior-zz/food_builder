@@ -3,6 +3,8 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import axios from "../../axios-order";
+import Spinner from "../../components/UI/Spinner/Spinner";
 const ING_PRICE = {
     salad: .2,
     cheese: .4,
@@ -21,7 +23,8 @@ class BurgerBuilder extends Component {
 
             },
             total_price: 4,
-            show_modal: false
+            show_modal: false,
+            is_fetching: false
         }
     }
 
@@ -53,15 +56,55 @@ class BurgerBuilder extends Component {
         this.setState({ show_modal: false })
     }
 
-    on_purchase_continue=()=>{
-        console.log('u continue!')
+
+    on_purchase_continue = async () => {
+        this.setState({ is_fetching: true })
+        console.log('u continue!');
+        const data = {
+            ingredients: this.state.ingredients,
+            price: this.state.total_price,
+            customer: {
+                name: 'lior',
+                address: {
+                    street: 'test_street',
+                    zip_code: 65346,
+                    country: 'israel'
+
+                },
+                email: 'sf@sdf.com',
+
+            },
+            delivery_method: 'fastest'
+        }
+        try {
+            const response = await axios.post('/orders.json', data);
+            console.log(response);
+            this.setState({ is_fetching: false,show_modal:false })
+        }
+
+        catch (error) {
+            console.log(error);
+        }
+
+
     }
     render() {
         return (
             <>
-                ?
-                <Modal  on_modal_close={this.on_modal_close} show={this.state.show_modal}>
-                    <OrderSummary total_price={this.state.total_price} on_purchase_continue={this.on_purchase_continue} on_cancel={this.on_modal_close} ingredients={this.state.ingredients}></OrderSummary>
+
+                <Modal on_modal_close={this.on_modal_close} show={this.state.show_modal}>
+                    {this.state.is_fetching ?
+                        <Spinner></Spinner>
+                        :
+                        <OrderSummary
+                            total_price={this.state.total_price}
+                            on_purchase_continue={this.on_purchase_continue}
+                            on_cancel={this.on_modal_close}
+                            ingredients={this.state.ingredients}>
+
+                        </OrderSummary>
+                    }
+
                 </Modal>
 
 
