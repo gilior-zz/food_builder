@@ -3,20 +3,23 @@ import Modal from "../UI/Modal/Modal";
 const withErrorHandler = (Wrapped_comp, axios) => {
     return (props) => {
         const [err, update_err] = useState(null)
-
+      let  reqInterceptor=null;
+      let  resInterceptor=null;
         useEffect(() => {
-           let reqIn axios.interceptors.request.use((request) => {
+            reqInterceptor = axios.interceptors.request.use((request) => {
                 update_err(null);
                 return request;
             })
-            axios.interceptors.response.use(
+            resInterceptor = axios.interceptors.response.use(
                 response => response,
                 error => {
                     update_err(err);
                     return Promise.reject(err);
                 })
             return () => {
-
+                console.log('will unmount');
+                axios.interceptors.request.eject(reqInterceptor);
+                axios.interceptors.response.eject(resInterceptor);
             }
 
         })
